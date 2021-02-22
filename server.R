@@ -1,11 +1,3 @@
-library(shiny)
-library(shinyjs)
-library(shinydashboard)
-
-library(DT)
-library(readxl)
-
-library(dplyr)
 
 
 source("src/sourceDir.R")
@@ -122,11 +114,7 @@ output$sample_table <- renderDT({sampleTable()})
   observeEvent(input$ok, {
     # Check that data object exists and is data frame.
    
-    progress <- Progress$new(session)
-    
-    progress$set(message = paste('Loading Samples'),
-                 detail = 'This may take a while...')
-    
+  
     account <- CoreAPIV2::coreAPI("Credentialsfreq.txt")
     
     account$user <- input$user
@@ -136,19 +124,12 @@ output$sample_table <- renderDT({sampleTable()})
     
     print(str(sampleTable()) )
     
-    for(i in 1 :nrow(sampleTable())) {
-      
-      
-      
-      loadReport(load_samples(sampleTable(),creds))
-      
-      progress$inc(amount = 1/nrow(sampleTable()))
-      Sys.sleep(1)
-    }
+    print(nrow(sampleTable()))
     
-    progress$close()
-    
-    
+    withProgress(message = "Loading Samples",value = 0,{  
+    loadReport(load_samples(sampleTable(),creds))
+ 
+    })
     
     lo<-CoreAPIV2::logOut(creds) 
     

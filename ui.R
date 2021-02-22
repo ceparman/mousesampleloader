@@ -1,4 +1,15 @@
 
+library(shiny)
+library(shinyjs)
+library(shinydashboard)
+
+library(DT)
+library(readxl)
+
+library(dplyr)
+
+
+
 #UI page for Mouse Sample Loader
 
 fluidPage(
