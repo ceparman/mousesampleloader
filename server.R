@@ -61,13 +61,17 @@ sampleTable <- reactive({
                               } else{
                                
                                 
-                                MouseSampleTemplate <- read_excel(input$sample_file$datapath, col_types = rep("text",12),
+                                MouseSampleTemplate <- read_excel(input$sample_file$datapath, 
+                                                                #  col_types = c(rep("text",12)),
+                                                                 col_types = c("text","date",rep("text",10)),  
                                                                   skip = 1) 
                                 
                                 
+                                MouseSampleTemplate$DOB <- as.character(MouseSampleTemplate$DOB)
+                                MouseSampleTemplate
                               }
                                 
-                              
+                           
                                
                                })
   
@@ -112,8 +116,6 @@ output$sample_table <- renderDT({sampleTable()})
   
   
   observeEvent(input$ok, {
-    # Check that data object exists and is data frame.
-   
   
     account <- CoreAPIV2::coreAPI("Credentialsfreq.txt")
     
@@ -134,7 +136,7 @@ output$sample_table <- renderDT({sampleTable()})
     lo<-CoreAPIV2::logOut(creds) 
     
     
-    write.csv(x = loadReport(),file = tempfile_name(),row.names = F,col.names = T)
+    write.csv(x = loadReport(),file = tempfile_name(),row.names = F)
     
   
     

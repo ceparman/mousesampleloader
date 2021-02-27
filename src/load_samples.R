@@ -5,10 +5,17 @@ load_samples <- function(sampleDF,creds)
 {
 
 log <- sampleDF
+
 log$barcode <- rep("",nrow(sampleDF))
   
+log$loadResult <- rep("",nrow(sampleDF))
+
+loadError <- F
   
 for(i in 1:nrow(sampleDF)){
+  
+  
+  
   
 #Convert NA to ""
   
@@ -35,9 +42,9 @@ for(i in 1:nrow(sampleDF)){
 #NA1TEST   
   attributes <- list(
     NA_CEP_STRAIN = sampleDF$`MOUSE STRAIN`[i],
-    NA_CEP_DOB = sampleDF$DOB[i],
+    NA_CEP_DOB = paste0(as.character(sampleDF$DOB[i]),"T00:00:00Z"),
     NA_CEP_SEX = sampleDF$SEX[i],
-    FREQ_AGE = ifelse(sampleDF$`Age (wks)`[i] =="","", paste0(sampleDF$`Age (wks)`[i]," wks")),
+    FREQ_AGE = sampleDF$`Age (wks)`[i],
     FREQ_DEAFENING_METHOD = sampleDF$`Deafening method`[i],
     FREQ_IT_INJECTION_TIME_AGE = sampleDF$`IT inj time Age (wks)`[i],
     FREQ_SAC_TIME_AGE = sampleDF$`sac time Age (wks)`[i],
@@ -49,9 +56,17 @@ for(i in 1:nrow(sampleDF)){
   )
   
 
-  
-  print(attributes)
-sample <- CoreAPIV2::createEntity(coreApi = creds,entityType = "MOUSE",body = attributes,useVerbose = T)
+#Validate Uniqueness
+
+loadResult <- "Load Successful"  
+    
+isUnique <- checkMouseSampleUniqueness(creds, sampleDF$`Animal #`[i], sampleDF$Vendor[i])  
+
+if(isUnique ) { 
+
+print(isUnique)  
+
+sample <- CoreAPIV2::createEntity(coreApi = creds,entityType = "MOUSE",body = attributes,useVerbose = F)
 
 #record barcode
 
@@ -63,7 +78,7 @@ log$barcode[i] <- sample$entity$Barcode
 lot_att <- list(FREQ_NEXT_STEP = "Dissection")
 
 
-lot1 <- createSampleLot(coreApi = creds,sampleType = "MOUSE",body = lot_att, sampleBarcode = sample$entity$Barcode ,useVerbose = T)
+lot1 <- createSampleLot(coreApi = creds,sampleType = "MOUSE",body = lot_att, sampleBarcode = sample$entity$Barcode ,useVerbose = F)
 
 
 
@@ -72,14 +87,28 @@ lot1 <- createSampleLot(coreApi = creds,sampleType = "MOUSE",body = lot_att, sam
 lot_att <- list(FREQ_NEXT_STEP = "On Hold")
 
 
-lot2 <- createSampleLot(coreApi = creds,sampleType = "MOUSE",body = lot_att, sampleBarcode = sample$entity$Barcode )
+lot2 <- createSampleLot(coreApi = creds,sampleType = "MOUSE",body = lot_att, sampleBarcode = sample$entity$Barcode,useVerbose = F )
 
 
 incProgress( i/nrow(sampleDF))
 
 Sys.sleep(1)
 
+} else { log$loadResult <- "SAMPLE NOT LOADED, Animal Number and Vendor are already in LIMS" 
+         loadError <- T}
+
 }
+
+if(loadError) {  incProgress( i/nrow(sampleDF)) 
+                 showModal(modalDialog( title = "Sample Load Error",
+                                          "One or more sample was not loaded.  Download the Load Report for details.",
+                                          easyClose = FALSE,
+                                          footer =   tagList( modalButton("OK"))
+                                        )
+                           )
+                  Sys.sleep(30)
+                   
+                               }
 
 log
 
