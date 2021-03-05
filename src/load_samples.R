@@ -10,10 +10,11 @@ log$barcode <- rep("",nrow(sampleDF))
   
 log$loadResult <- rep("",nrow(sampleDF))
 
-loadError <- F
+
+loadError <- F 
   
 for(i in 1:nrow(sampleDF)){
-  
+
   
   
   
@@ -55,47 +56,82 @@ for(i in 1:nrow(sampleDF)){
     FREQ_VENDOR = sampleDF$Vendor[i]
   )
   
+#Validate that all required fields are not empty  
+  
+  
+all_required <- all(sampleDF[i,c(1,4:12)] != "")  
+  
 
 #Validate Uniqueness
 
-loadResult <- "Load Successful"  
-    
+
 isUnique <- checkMouseSampleUniqueness(creds, sampleDF$`Animal #`[i], sampleDF$Vendor[i])  
 
-if(isUnique ) { 
+if(isUnique & all_required ) { 
 
-print(isUnique)  
+print(isUnique )  
 
-sample <- CoreAPIV2::createEntity(coreApi = creds,entityType = "MOUSE",body = attributes,useVerbose = F)
+  
+loadResult <- tryCatch(
+  
+  {   
+  
+  
+    sample <- CoreAPIV2::createEntity(coreApi = creds,entityType = "MOUSE",body = attributes,useVerbose = F)
 
 #record barcode
 
-log$barcode[i] <- sample$entity$Barcode
+    log$barcode[i] <- sample$entity$Barcode
 
 
 #Create lot 1
 
-lot_att <- list(FREQ_NEXT_STEP = "Dissection")
+    lot_att <- list(FREQ_NEXT_STEP = "Dissection")
 
 
-lot1 <- createSampleLot(coreApi = creds,sampleType = "MOUSE",body = lot_att, sampleBarcode = sample$entity$Barcode ,useVerbose = F)
-
-
+    lot1 <- createSampleLot(coreApi = creds,sampleType = "MOUSE",body = lot_att, sampleBarcode = sample$entity$Barcode ,useVerbose = F)
 
 #Create lot 2
 
-lot_att <- list(FREQ_NEXT_STEP = "On Hold")
+    lot_att <- list(FREQ_NEXT_STEP = "On Hold")
+  
+    lot2 <- createSampleLot(coreApi = creds,sampleType = "MOUSE",body = lot_att, sampleBarcode = sample$entity$Barcode,useVerbose = F )
+
+    incProgress( i/nrow(sampleDF))
+  
+   Sys.sleep(1)
+   message("Sample and lots created")
+  } ,
+
+error=function(cond) {
+  loadError <- TRUE
+  
+  incProgress( i/nrow(sampleDF))
+  
+  Sys.sleep(1)
+  
+   return("Sample and lots failed to be loaded, created")
+     
+   }
 
 
-lot2 <- createSampleLot(coreApi = creds,sampleType = "MOUSE",body = lot_att, sampleBarcode = sample$entity$Barcode,useVerbose = F )
+) #end tryCatch
 
+log$loadResult[i] <- loadResult
 
-incProgress( i/nrow(sampleDF))
-
-Sys.sleep(1)
-
-} else { log$loadResult <- "SAMPLE NOT LOADED, Animal Number and Vendor are already in LIMS" 
-         loadError <- T}
+} else {   log$loadResult[i] <- "SAMPLE NOT LOADED, "
+           loadError <- T
+          if(!isUnique ) { 
+           log$loadResult[i] <- paste(log$loadResult[i],
+                                      "Animal Number and Vendor are already in LIMS, ") 
+            }
+           if(!all_required) { 
+             log$loadResult[i] <- paste(log$loadResult[i],
+                                        "Sample missing required value") 
+             }
+            
+          
+        }
 
 }
 
@@ -106,9 +142,9 @@ if(loadError) {  incProgress( i/nrow(sampleDF))
                                           footer =   tagList( modalButton("OK"))
                                         )
                            )
-                  Sys.sleep(30)
-                   
-                               }
+                
+                   Sys.sleep(5)
+                }
 
 log
 

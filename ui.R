@@ -19,7 +19,7 @@ fluidPage(
     sidebarPanel (width = 3,
 
 #Login
-      textInput("user", "enter user name","Contractor"),
+      textInput("user", "enter user name",""),
       passwordInput("password","enter password"),    
       actionButton("validate", "validate credentials"),
       textOutput(outputId = "logmessage"),
