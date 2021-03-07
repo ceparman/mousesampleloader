@@ -25,9 +25,12 @@ checkMouseSampleUniqueness <- function(creds, animalid, vendor)
   
   
 #query for and samples  
-  
+
+#NA1test    
 query = paste0( "?$filter=FREQ_VENDOR eq '",vendor,"' and NA_CEP_ANIMAL_NUM eq '",animalid,"'&$count=true")
 
+#NA1prod
+#query = paste0( "?$filter=FREQ_VENDOR eq '",vendor,"' and FREQ_ANIMAL_NUMBER eq '",animalid,"'&$count=true")
 
 query<- URLencode(query)
 

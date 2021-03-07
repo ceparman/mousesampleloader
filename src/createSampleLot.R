@@ -1,4 +1,4 @@
-createSampleLot <-
+local_createSampleLot <-
   function (coreApi,
             sampleType,
             sampleBarcode,

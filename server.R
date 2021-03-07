@@ -1,5 +1,7 @@
 
 
+debug <- TRUE
+
 source("src/sourceDir.R")
 sourceDir("src/")
 
@@ -87,17 +89,7 @@ output$sample_table <- renderDT({sampleTable()})
   
 ## Load samples
 
-# observeEvent(input$load_samples,{
-#   
-#   #Alert
-#   
-#   n_samples_to_load <- nrow(sampleTable())
-#   
-#  # showModal(modalDialog(title =paste("You are about to add",n_samples_to_load,"samples")),
-#   #                       paste("Proceed?, This can not by undone"))
-#   showModal(modalDialog(title ="Error Validating Formulations ",
-#                         paste("You must select at least one compound")))
-#  
+
   
   dataModal <- function() {
     n_samples_to_load <- nrow(sampleTable())
@@ -129,14 +121,17 @@ output$sample_table <- renderDT({sampleTable()})
     print(nrow(sampleTable()))
     
     withProgress(message = "Loading Samples",value = 0,{  
-    loadReport(load_samples(sampleTable(),creds))
+   
+       report <- load_samples(sampleTable(),creds)
  
+   
     })
+    print(report)
     
-    lo<-CoreAPIV2::logOut(creds) 
+    lo<-CoreAPIV2::logOut(creds,useVerbose = debug)
     
     
-    write.csv(x = loadReport(),file = tempfile_name(),row.names = F)
+    write.csv(x = report,file = tempfile_name(),row.names = F)
     
   
     
