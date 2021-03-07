@@ -7,7 +7,6 @@ sourceDir("src/")
 
 
 
-options(shiny.maxRequestSize=600*1024^2)
 shinyServer(function(input, output, session){
   
   

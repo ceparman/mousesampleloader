@@ -43,21 +43,21 @@ for(i in 1:nrow(sampleDF)){
   
 
   
-#NA1TEST
-attributes <- list(
-  NA_CEP_STRAIN = sampleDF$`MOUSE STRAIN`[i],
-  NA_CEP_DOB = paste0(as.character(sampleDF$DOB[i]),"T00:00:00Z"),
-  NA_CEP_SEX = sampleDF$SEX[i],
-  FREQ_AGE = sampleDF$`Age (wks)`[i],
-  FREQ_DEAFENING_METHOD = sampleDF$`Deafening method`[i],
-  FREQ_IT_INJECTION_TIME_AGE = sampleDF$`IT inj time Age (wks)`[i],
-  FREQ_SAC_TIME_AGE = sampleDF$`sac time Age (wks)`[i],
-  FREQ_FIXATION = sampleDF$FIXATION[i],
-  FREQ_DECALCIFICATION = sampleDF$DECAL[i],
-  FREQ_FORMULATION = sampleDF$`Formulation(FT or Vehicle)`[i],
-  NA_CEP_ANIMAL_NUM= sampleDF$`Animal #`[i],
-  FREQ_VENDOR = sampleDF$Vendor[i]
-)
+# #NA1TEST
+# attributes <- list(
+#   NA_CEP_STRAIN = sampleDF$`MOUSE STRAIN`[i],
+#   NA_CEP_DOB = paste0(as.character(sampleDF$DOB[i]),"T00:00:00Z"),
+#   NA_CEP_SEX = sampleDF$SEX[i],
+#   FREQ_AGE = sampleDF$`Age (wks)`[i],
+#   FREQ_DEAFENING_METHOD = sampleDF$`Deafening method`[i],
+#   FREQ_IT_INJECTION_TIME_AGE = sampleDF$`IT inj time Age (wks)`[i],
+#   FREQ_SAC_TIME_AGE = sampleDF$`sac time Age (wks)`[i],
+#   FREQ_FIXATION = sampleDF$FIXATION[i],
+#   FREQ_DECALCIFICATION = sampleDF$DECAL[i],
+#   FREQ_FORMULATION = sampleDF$`Formulation(FT or Vehicle)`[i],
+#   NA_CEP_ANIMAL_NUM= sampleDF$`Animal #`[i],
+#   FREQ_VENDOR = sampleDF$Vendor[i]
+# )
   
 #Validate that all required fields are not empty  
   
