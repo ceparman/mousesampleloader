@@ -20,15 +20,21 @@ for(i in 1:nrow(sampleDF)){
   
   
   
-#Convert NA to ""
+#Convert NA to "" in SEX
   
-  sampleDF[i ,is.na(sampleDF[i,])[1,] ] <- "" 
+  sampleDF[i,3] <- ifelse(is.na(sampleDF[i,3]),"",sampleDF[i,3]) 
+  
+
+#Fix DOB to proper format if it is not blank.   
+    
+  char_date <- ifelse(is.na(sampleDF$DOB[i]),"",
+                            as.character(paste0(as.character(sampleDF$DOB[i]),"T00:00:00Z") ))
   
 #NA1
   
   attributes <- list(
     STRAIN = sampleDF$`MOUSE STRAIN`[i],
-    FREQ_DOB = paste0(as.character(sampleDF$DOB[i]),"T00:00:00Z"),
+    FREQ_DOB = char_date,
     SEX = sampleDF$SEX[i],
     FREQ_AGE = sampleDF$`Age (wks)`[i],
     FREQ_DEAFENING_METHOD = sampleDF$`Deafening method`[i],
@@ -46,7 +52,7 @@ for(i in 1:nrow(sampleDF)){
 # #NA1TEST
 # attributes <- list(
 #   NA_CEP_STRAIN = sampleDF$`MOUSE STRAIN`[i],
-#   NA_CEP_DOB = paste0(as.character(sampleDF$DOB[i]),"T00:00:00Z"),
+#   NA_CEP_DOB = char_date,
 #   NA_CEP_SEX = sampleDF$SEX[i],
 #   FREQ_AGE = sampleDF$`Age (wks)`[i],
 #   FREQ_DEAFENING_METHOD = sampleDF$`Deafening method`[i],
@@ -114,7 +120,7 @@ if(isUnique & all_required ) {
 
    loadError <- TRUE
   
-   incProgress( i/nrow(sampleDF))
+   incProgress( 1/nrow(sampleDF))
   
   Sys.sleep(1)
   
@@ -143,7 +149,7 @@ if(isUnique & all_required ) {
 
 }  #End i loop
 
-if(loadError) {  incProgress( i/nrow(sampleDF)) 
+if(loadError) {  incProgress( 1/nrow(sampleDF)) 
                  showModal(modalDialog( title = "Sample Load Error",
                                           "One or more sample was not loaded.  Download the Load Report for details.",
                                           easyClose = FALSE,
