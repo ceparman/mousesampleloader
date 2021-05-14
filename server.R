@@ -63,9 +63,9 @@ sampleTable <- reactive({
                                
                                 
                                 MouseSampleTemplate <- read_excel(input$sample_file$datapath, 
-                                                                #  col_types = c(rep("text",12)),
-                                                                 col_types = c("text","date",rep("text",10)),  
+                                                                  col_types = c(rep("text",2),"date",rep("text",10)),  
                                                                   skip = 1) 
+                                                                  
                                 
                                 
                                 MouseSampleTemplate$DOB <- as.character(MouseSampleTemplate$DOB)

@@ -30,10 +30,16 @@ for(i in 1:nrow(sampleDF)){
   char_date <- ifelse(is.na(sampleDF$DOB[i]),"",
                             as.character(paste0(as.character(sampleDF$DOB[i]),"T00:00:00Z") ))
   
+  
+  
+  
 #NA1
+  
+if(creds$coreUrl == "na1.platformforscience.com") { 
   
   attributes <- list(
     STRAIN = sampleDF$`MOUSE STRAIN`[i],
+    FREQ_STRAIN_GENOTYPE = sampleDF$`MOUSE STRAIN GENOTYPE`[i],
     FREQ_DOB = char_date,
     SEX = sampleDF$SEX[i],
     FREQ_AGE = sampleDF$`Age (wks)`[i],
@@ -42,33 +48,37 @@ for(i in 1:nrow(sampleDF)){
     FREQ_SAC_TIME_AGE = sampleDF$`sac time Age (wks)`[i],
     FREQ_FIXATION = sampleDF$FIXATION[i],
     FREQ_DELCALCIFICATION= sampleDF$DECAL[i],
-    FREQ_FORMULATION = sampleDF$`Formulation(FT or Vehicle)`[i],
+    FREQ_FORMULATION = sampleDF$`Formulation(FT, Vehicle, or None)`[i],
     FREQ_ANIMAL_NUMBER= sampleDF$`Animal #`[i],
     FREQ_VENDOR = sampleDF$Vendor[i]
   )
   
-
+} else{
   
 # #NA1TEST
-# attributes <- list(
-#   NA_CEP_STRAIN = sampleDF$`MOUSE STRAIN`[i],
-#   NA_CEP_DOB = char_date,
-#   NA_CEP_SEX = sampleDF$SEX[i],
-#   FREQ_AGE = sampleDF$`Age (wks)`[i],
-#   FREQ_DEAFENING_METHOD = sampleDF$`Deafening method`[i],
-#   FREQ_IT_INJECTION_TIME_AGE = sampleDF$`IT inj time Age (wks)`[i],
-#   FREQ_SAC_TIME_AGE = sampleDF$`sac time Age (wks)`[i],
-#   FREQ_FIXATION = sampleDF$FIXATION[i],
-#   FREQ_DECALCIFICATION = sampleDF$DECAL[i],
-#   FREQ_FORMULATION = sampleDF$`Formulation(FT or Vehicle)`[i],
-#   NA_CEP_ANIMAL_NUM= sampleDF$`Animal #`[i],
-#   FREQ_VENDOR = sampleDF$Vendor[i]
-# )
+attributes <- list(
+  NA_CEP_STRAIN = sampleDF$`MOUSE STRAIN`[i],
+  FREQ_STRAIN_GENOTYPE = sampleDF$`MOUSE STRAIN GENOTYPE`[i],
+  NA_CEP_DOB = char_date,
+  NA_CEP_SEX = sampleDF$SEX[i],
+  FREQ_AGE = sampleDF$`Age (wks)`[i],
+  FREQ_DEAFENING_METHOD = sampleDF$`Deafening method`[i],
+  FREQ_IT_INJECTION_TIME_AGE = sampleDF$`IT inj time Age (wks)`[i],
+  FREQ_SAC_TIME_AGE = sampleDF$`sac time Age (wks)`[i],
+  FREQ_FIXATION = sampleDF$FIXATION[i],
+  FREQ_DECALCIFICATION = sampleDF$DECAL[i],
+  FREQ_FORMULATION = sampleDF$`Formulation(FT, Vehicle, or None)`[i],
+  NA_CEP_ANIMAL_NUM= sampleDF$`Animal #`[i],
+  FREQ_VENDOR = sampleDF$Vendor[i]
+)
+  
+}  
   
 #Validate that all required fields are not empty  
   
+required_columns <- which(read_excel("www/MouseSampleTemplate.xlsx", col_names = F,n_max=1) == "Required")   
   
-all_required <- all(sampleDF[i,c(1,4:12)] != "")  
+all_required <- all(!(sampleDF[i,required_columns] %in%  c("",NA)))  
   
 
 #Validate Uniqueness
@@ -76,8 +86,14 @@ all_required <- all(sampleDF[i,c(1,4:12)] != "")
 #NA1PROD
 
 isUnique <- checkMouseSampleUniqueness(creds, sampleDF$`Animal #`[i], sampleDF$Vendor[i])  
+
+
+
+print("isUnique" )
 print(isUnique ) 
 
+print("all_required" )
+print(all_required ) 
 
 if(isUnique & all_required ) { 
 

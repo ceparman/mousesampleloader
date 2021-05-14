@@ -18,7 +18,7 @@ fluidPage(
   useShinyjs(),
   titlePanel( title = "Mouse Sample Loader"),
   sidebarLayout(
-    sidebarPanel (width = 3,
+    sidebarPanel (width = 2,
 
 #Login
       textInput("user", "enter user name",""),
