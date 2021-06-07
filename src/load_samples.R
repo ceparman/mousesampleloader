@@ -27,11 +27,12 @@ for(i in 1:nrow(sampleDF)){
 
 #Fix DOB to proper format if it is not blank.   
     
-  char_date <- ifelse(is.na(sampleDF$DOB[i]),"",
+char_date <- ifelse(is.na(sampleDF$DOB[i]),"",
                             as.character(paste0(as.character(sampleDF$DOB[i]),"T00:00:00Z") ))
   
+  print(is.na(sampleDF$DOB[i]))
   
-  
+#  char_date <- NULL
   
 #NA1
   
@@ -52,9 +53,28 @@ if(creds$coreUrl == "na1.platformforscience.com") {
     FREQ_ANIMAL_NUMBER= sampleDF$`Animal #`[i],
     FREQ_VENDOR = sampleDF$Vendor[i]
   )
-  
-} else{
-  
+  #Frequency Prod Copy 
+} else 
+      if(creds$account == "Frequency Prod Copy 4-14-2021"){
+      
+      attributes <- list(
+        STRAIN = sampleDF$`MOUSE STRAIN`[i],
+        FREQ_STRAIN_GENOTYPE = sampleDF$`MOUSE STRAIN GENOTYPE`[i],
+        FREQ_DOB = char_date,
+        SEX = sampleDF$SEX[i],
+        FREQ_AGE = sampleDF$`Age (wks)`[i],
+        FREQ_DEAFENING_METHOD = sampleDF$`Deafening method`[i],
+        FREQ_IT_INJECTION_TIME_AGE = sampleDF$`IT inj time Age (wks)`[i],
+        FREQ_SAC_TIME_AGE = sampleDF$`sac time Age (wks)`[i],
+        FREQ_FIXATION = sampleDF$FIXATION[i],
+        FREQ_DELCALCIFICATION= sampleDF$DECAL[i],
+        FREQ_FORMULATION = sampleDF$`Formulation(FT, Vehicle, or None)`[i],
+        FREQ_ANIMAL_NUMBER= sampleDF$`Animal #`[i],
+        FREQ_VENDOR = sampleDF$Vendor[i]
+      ) 
+      
+      
+    } else{
 # #NA1TEST
 attributes <- list(
   NA_CEP_STRAIN = sampleDF$`MOUSE STRAIN`[i],
@@ -102,7 +122,7 @@ if(isUnique & all_required ) {
 
          #Create sample 
    
-         sample <- safecreateEntity(coreApi = creds,entityType = "MOUSE",body = attributes,useVerbose = T)
+         sample <- safecreateEntity(coreApi = creds,entityType = "MOUSE",body = attributes,useVerbose = F)
 
         
         #Create lot 1

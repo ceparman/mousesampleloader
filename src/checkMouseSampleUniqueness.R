@@ -30,7 +30,10 @@ checkMouseSampleUniqueness <- function(creds, animalid, vendor)
  
   if(creds$coreUrl == "na1.platformforscience.com") {   
      query = paste0( "?$filter=FREQ_VENDOR eq '",vendor,"' and FREQ_ANIMAL_NUMBER eq '",animalid,"' and Active eq true&$count=true")
-  } else{ 
+  } else 
+    if(creds$account == "Frequency Prod Copy 4-14-2021"){
+      query = paste0( "?$filter=FREQ_VENDOR eq '",vendor,"' and FREQ_ANIMAL_NUMBER eq '",animalid,"' and Active eq true&$count=true")
+    } else {
 
 #NA1test     
     query = paste0( "?$filter=FREQ_VENDOR eq '",vendor,"' and NA_CEP_ANIMAL_NUM eq '",animalid,"' and Active eq true&$count=true")
