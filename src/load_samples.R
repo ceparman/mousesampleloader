@@ -27,12 +27,15 @@ for(i in 1:nrow(sampleDF)){
 
 #Fix DOB to proper format if it is not blank.   
     
-char_date <- ifelse(is.na(sampleDF$DOB[i]),"",
+
+  char_date <- ifelse(  ( (is.na(sampleDF$DOB[i]) )   | (sampleDF$DOB[i] == "") )  ,"",
                             as.character(paste0(as.character(sampleDF$DOB[i]),"T00:00:00Z") ))
+
+print(char_date)  
+    
+ print(is.na(sampleDF$DOB[i]))
   
-  print(is.na(sampleDF$DOB[i]))
-  
-#  char_date <- NULL
+
   
 #NA1
   
@@ -94,6 +97,12 @@ attributes <- list(
   
 }  
   
+ 
+ #save attributes for debugging
+ 
+ saveRDS(attributes,"attributes.RDS")
+ 
+ 
 #Validate that all required fields are not empty  
   
 required_columns <- which(read_excel("www/MouseSampleTemplate.xlsx", col_names = F,n_max=1) == "Required")   
