@@ -31,9 +31,9 @@ for(i in 1:nrow(sampleDF)){
   char_date <- ifelse(  ( (is.na(sampleDF$DOB[i]) )   | (sampleDF$DOB[i] == "") )  ,"",
                             as.character(paste0(as.character(sampleDF$DOB[i]),"T00:00:00Z") ))
 
-print(char_date)  
+#print(char_date)  
     
- print(is.na(sampleDF$DOB[i]))
+ #print(is.na(sampleDF$DOB[i]))
   
 
   
@@ -54,7 +54,8 @@ if(creds$coreUrl == "na1.platformforscience.com") {
     FREQ_DELCALCIFICATION= sampleDF$DECAL[i],
     FREQ_FORMULATION = sampleDF$`Formulation(FT, Vehicle, or None)`[i],
     FREQ_ANIMAL_NUMBER= sampleDF$`Animal #`[i],
-    FREQ_VENDOR = sampleDF$Vendor[i]
+    FREQ_VENDOR = sampleDF$Vendor[i],
+    FREQ_LINEAGE_TRACING_METHOD = sampleDF$`Lineage Tracing Method`[i]
   )
   #Frequency Prod Copy 
 } else 
@@ -73,7 +74,8 @@ if(creds$coreUrl == "na1.platformforscience.com") {
         FREQ_DELCALCIFICATION= sampleDF$DECAL[i],
         FREQ_FORMULATION = sampleDF$`Formulation(FT, Vehicle, or None)`[i],
         FREQ_ANIMAL_NUMBER= sampleDF$`Animal #`[i],
-        FREQ_VENDOR = sampleDF$Vendor[i]
+        FREQ_VENDOR = sampleDF$Vendor[i],
+        FREQ_LINEAGE_TRACING_METHOD = sampleDF$`Lineage Tracing Method`[i]
       ) 
       
       
@@ -92,7 +94,8 @@ attributes <- list(
   FREQ_DECALCIFICATION = sampleDF$DECAL[i],
   FREQ_FORMULATION = sampleDF$`Formulation(FT, Vehicle, or None)`[i],
   NA_CEP_ANIMAL_NUM= sampleDF$`Animal #`[i],
-  FREQ_VENDOR = sampleDF$Vendor[i]
+  FREQ_VENDOR = sampleDF$Vendor[i],
+  FREQ_LINEAGE_TRACING_METHOD = sampleDF$`Lineage Tracing Method`[i]
 )
   
 }  
@@ -100,7 +103,7 @@ attributes <- list(
  
  #save attributes for debugging
  
- saveRDS(attributes,"attributes.RDS")
+# saveRDS(attributes,"attributes.RDS")
  
  
 #Validate that all required fields are not empty  

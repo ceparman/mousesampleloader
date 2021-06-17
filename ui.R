@@ -36,8 +36,9 @@ fluidPage(
 
 #Download Template
 
-      downloadButton("downloadData", "Download Sample Template")
-      
+ #    downloadButton("downloadData", "Download Sample Template")
+        tags$a(href="https://frequencytx.box.com/s/tog25elok1atryi3buujps0qs0rviqty", 
+               "Click here! to download a template")
     ),
 
     mainPanel(
