@@ -41,7 +41,7 @@ fluidPage(
                "Click here! to download a template")
     ),
 
-    mainPanel(
+    mainPanel( 
       
 #Table display of uploaded data
       
